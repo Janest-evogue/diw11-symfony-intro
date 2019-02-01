@@ -1,0 +1,133 @@
+{# le template hértite de base.html.twig #}
+{% extends 'base.html.twig' %}
+
+{#
+surcharge le bloc title défini dans base.html.twig
+{{ parent() }} reprend le contenu du bloc title de base.html.twig
+#}
+{% block title %}{{ parent() }} - Twig{% endblock %}
+
+{% block body %}
+    {# définit une variable #}
+    {% set test = 'variable de test' %}
+
+    {# affiche la variable #}
+    {{ test }} !
+
+    {# concaténation avec le tilde (~) #}
+    <p>{{ test ~ ' !' }}</p>
+
+    {# équivalent de var_dump() #}
+    {{ dump(test) }}
+
+    {# structure conditionnelle #}
+    {% if test != '' %}
+        <p>test n'est pas vide</p>
+    {% else %}
+        <p>test est vide</p>
+    {% endif %}
+
+    {% set vrai = true %}
+    {% set faux = false %}
+
+    {#
+    not pour !
+    if (!$faux)
+    #}
+    {% if not faux %}
+        <p>faux n'est pas vrai</p>
+    {% endif %}
+
+    {#
+    and et or en toutes lettres
+    if ($vrai && !$faux)
+    #}
+    {% if vrai and not faux %}
+        <p>vrai est vrai et faux n'est pas vrai</p>
+    {% endif %}
+
+    {# tableau indéxé #}
+    {% set tab = [1, 2, 3, 4] %}
+
+    {# foreach ($tab as $element) #}
+    {% for element in tab %}
+        {{ element }}<br>
+    {% endfor %}
+
+    {#
+    tableau associatif
+    $hash = [
+        'foo' => 'Foo',
+        'bar' => 'Bar'
+    ]
+    #}
+    {% set hash = {foo: "Foo", bar: "Bar"} %}
+
+    {# foreach ($hash as $key => $value) #}
+    {% for key, value in hash %}
+        {{ key }} : {{ value }}<br>
+    {% endfor %}
+
+    <p>{{ hash['foo'] }}</p>
+    {# peut aussi s'écrire : #}
+    <p>{{ hash.foo }}</p>
+
+    {% set vide = [] %}
+
+    {% for element in vide %}
+        {{ element }}<br>
+    {% else %}
+        <p>Le tableau est vide</p>
+    {% endfor %}
+
+    {#
+    foreach ($tab as $nb)
+    la variable loop nous est toujours donnée dans une boucle
+    #}
+    {% for nb in tab %}
+        Tour de boucle (index 1) : {{ loop.index }}<br>
+        Tour de boucle (index 0) : {{ loop.index0 }}<br>
+        {{ nb }}<br>
+
+        {% if loop.first %}
+            <p>1er tour de boucle</p>
+        {% endif %}
+
+        {% if loop.last %}
+            <p>Dernier tour de boucle</p>
+        {% endif %}
+    {% endfor %}
+
+    {# Tests avec IS #}
+
+    {# if (isset($test)) #}
+    {% if test is defined %}
+        <p>La variable "test" existe</p>
+    {% endif %}
+
+    {# if (!empty($test)) #}
+    {% if test is not empty %}
+        <p>La variable "test" n'est pas vide</p>
+    {% endif %}
+
+    {# if (!is_null($test)) #}
+    {% if test is not null %}
+        <p>La variable "test" n'est pas nulle</p>
+    {% endif %}
+
+    {# even et odd pour pair et impair #}
+    {% if tab.1 is even %}
+        <p>Le 2e élément de tab est pair</p>
+    {% endif %}
+
+    {% set dix = 10 %}
+
+    {% if dix is divisible by(5) %}
+        <p>{{ dix }} est divisible par 5</p>
+    {% endif %}
+
+    {# if (in_array(2, $tab)) #}
+    {% if 2 in tab %}
+        <p>tab contient 2</p>
+    {% endif %}
+{% endblock %}
