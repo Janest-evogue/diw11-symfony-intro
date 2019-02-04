@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {# affichage du/des message(s) de type 'success' #}
+    {% for message in app.session.flashBag.get('success') %}
+        {{ message }}
+    {% endfor %}
+{% endblock %}

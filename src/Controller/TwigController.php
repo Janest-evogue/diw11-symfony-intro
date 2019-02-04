@@ -21,10 +21,14 @@ class TwigController extends AbstractController
      */
     public function index()
     {
+        $date = new \DateTime();
+
+        echo $date->format('d/m/y');
+
         return $this->render(
             'twig/index.html.twig',
             [
-
+                'auj' => new \DateTime()
             ]
         );
     }

@@ -130,4 +130,50 @@ surcharge le bloc title défini dans base.html.twig
     {% if 2 in tab %}
         <p>tab contient 2</p>
     {% endif %}
+
+    {# filtres avec pipe (|) #}
+
+    {# echo strtoupper($test) #}
+    <p>{{ test|upper }}</p>
+
+    {# le filtre default s'applique quand la variable est vide (empty) #}
+    <p>{{ var|default('La variable var est vide') }}</p>
+
+    {# formatage de date avec la même syntaxe que la fonction date() de PHP #}
+    <p>{{ auj|date('d/m/Y H:i:s') }}</p>
+
+    <p>{{ '2018-02-01'|date('d/m/Y') }}</p>
+
+    {# first et last pour 1er et dernier élément d'un tableau #}
+    <p>{{ hash|first }}</p>
+
+    {% set html = '<p>Un paragraphe</p>' %}
+
+    {#
+    par défaut le HTML est échappé en utilisant des entités HTML,
+    soit &lt; pour < et &gt; pour >
+    #}
+    {{ html }}
+
+    {# pour que le HTML ne soit pas échappé : #}
+    {{ html|raw }}
+
+    {#
+    inclusion d'un autre template :
+    chemin à partie de la racine du répoertoire templates
+    #}
+    {% include 'twig/inclus.html.twig' %}
+
+    {#
+    only fait que les variables accessibles dans ce fichier
+    ne le sont pas dans le fichier inclus
+    #}
+    {% include 'twig/inclus.html.twig' only %}
+    <hr>
+    {# passe une variable foo au fichier inclus #}
+    {% include 'twig/inclus.html.twig' with {foo: 'variable pour inclusion'} %}
+
+    {# ne passe que la variable foo au fichier inclus #}
+    {% include 'twig/inclus.html.twig' with {foo: 'variable pour inclusion'} only %}
+
 {% endblock %}
