@@ -69,6 +69,7 @@ class HttpController extends AbstractController
             dump($request->request->all());
 
             // $request->request fonctionne de la même manière que $request->query
+            dump($_POST['nom']);
             dump($request->request->get('nom'));
         }
 

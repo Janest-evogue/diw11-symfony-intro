@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <p>
+        <strong>Email : </strong>
+        {{ email }}
+    </p>
+    <p>
+        <strong>Message : </strong><br>
+        {{ message|nl2br }}
+    </p>
+{% endblock %}
