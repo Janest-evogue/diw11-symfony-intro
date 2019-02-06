@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,23 @@ class User
      * @ORM\Column(type="date")
      */
     private $birthdate;
+
+    /**
+     * @var Collection
+     *
+     * Le OneToMany (falcutatif) permet d'accéder aux publications
+     * depuis un objet User dans dans cet attribut.
+     * mappedBy dit quel attribut dans Publication définit la clé
+     * étrangère avec ManyToOne
+     *
+     * @ORM\OneToMany(targetEntity="Publication", mappedBy="author")
+     */
+    private $publications;
+
+    public function __construct()
+    {
+        $this->publications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +110,25 @@ class User
     public function setBirthdate(\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPublications(): Collection
+    {
+        return $this->publications;
+    }
+
+    /**
+     * @param Collection $publications
+     * @return User
+     */
+    public function setPublications(Collection $publications): User
+    {
+        $this->publications = $publications;
 
         return $this;
     }

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Publication;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -197,10 +199,101 @@ class DoctrineController extends AbstractController
         $repository = $em->getRepository(User::class);
         $user = $repository->find($id);
 
+        dump($user);
+
+        if ($request->isMethod('POST')) {
+            $user->setEmail($request->request->get('email'));
+
+            $em->persist($user);
+            $em->flush();
+        }
+
         return $this->render(
             'doctrine/update_user.html.twig',
             [
                 'user' => $user
+            ]
+        );
+    }
+
+    /**
+     * @Route("/delete-user/{id}")
+     */
+    public function deleteUser($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(User::class);
+        $user = $repository->find($id);
+
+        // si l'id existe en bdd
+        if (!is_null($user)) {
+            // suppression de l'utilisateur en bdd
+            $em->remove($user);
+            $em->flush();
+
+            return new Response('Utilisateur supprimé');
+        } else {
+            return new Response('Utilisateur inexistant');
+        }
+    }
+
+    /**
+     * ParamConverter :
+     * le paramètre dans l'url s'appelle id
+     * comme la clé primaire de la table user.
+     * En typant User le paramètre passé à la méthode, on récupère dans $user
+     * un objet User qui est défini à partir d'un SELECT sur la table user
+     * sur cet id
+     * Si l'id n'existe pas en bdd, le paramConverter retourne une 404
+     *
+     * @Route("/another-user/{id}")
+     */
+    public function getAnotherUser(User $user)
+    {
+        return $this->render(
+            'doctrine/get_one_user.html.twig',
+            [
+                'user' => $user
+            ]
+        );
+    }
+
+    /**
+     * @Route("/publications/author/{id}")
+     */
+    public function publicationsByAuthor(User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(Publication::class);
+
+        $publications = $repository->findBy([
+            'author' => $user
+        ]);
+
+        return $this->render(
+            'doctrine/publications.html.twig',
+            [
+                'publications' => $publications
+            ]
+        );
+    }
+
+    /**
+     * @Route("/user/{id}/publications")
+     */
+    public function userPublications(User $user)
+    {
+        /*
+         * En appelant le getter de l'attribut $publications d'un
+         * objet User, Doctrine va automatiquement faire une requête en bdd
+         * pour y mettre les publications liées au User grâce
+         * à l'annotation OneToMany sur l'attribut (lazy loading)
+         */
+
+        return $this->render(
+            'doctrine/publications.html.twig',
+            [
+                'publications' => $user->getPublications()
             ]
         );
     }

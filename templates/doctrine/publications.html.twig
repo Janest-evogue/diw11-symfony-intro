@@ -1,0 +1,20 @@
+{% extends'base.html.twig' %}
+
+{% block body %}
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Titre</th>
+            <th>Contenu</th>
+            <th>Auteur</th>
+        </tr>
+        {% for publication in publications %}
+            <tr>
+                <td>{{ publication.id }}</td>
+                <td>{{ publication.title }}</td>
+                <td>{{ publication.content }}</td>
+                <td>{{ publication.author }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
