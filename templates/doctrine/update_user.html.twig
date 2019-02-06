@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form method="post">
+        <div>
+            <label>Email</label>
+            <input type="text" name="email" value="{{ user.email }}">
+        </div>
+        <div>
+            <button type="submit">Enregistrer</button>
+        </div>
+    </form>
+{% endblock %}
