@@ -12,6 +12,7 @@
             <th>Prénom</th>
             <th>Email</th>
             <th>Date de naissance</th>
+            <th>Equipes</th>
         </tr>
         {% for user in users %}
             <tr>
@@ -20,6 +21,11 @@
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.birthdate|date('d/m/Y') }}</td>
+                <td>
+                    {% for team in user.teams %}
+                        {{ team.name }}<br>
+                    {% endfor %}
+                </td>
             </tr>
         {% endfor %}
     </table>

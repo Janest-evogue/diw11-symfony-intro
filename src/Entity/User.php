@@ -56,9 +56,17 @@ class User
      */
     private $publications;
 
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Team", mappedBy="users")
+     */
+    private $teams;
+
     public function __construct()
     {
         $this->publications = new ArrayCollection();
+        $this->teams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +140,27 @@ class User
 
         return $this;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    /**
+     * @param Collection $teams
+     * @return User
+     */
+    public function setTeams(Collection $teams): User
+    {
+        $this->teams = $teams;
+
+        return $this;
+    }
+
+
 
     public function __toString()
     {

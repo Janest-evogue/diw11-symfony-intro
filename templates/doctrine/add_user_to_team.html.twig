@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {#
+    - Faire un formulaire en post avec un liste déroulante
+    pour tous les utilisateurs et un bouton submit
+    - Faire en sorte de ne pas avoir les utilisateurs qui appartiennent
+    déjà à l'équipe dans la liste
+    #}
+    <form method="post">
+        <select name="user">
+            {% for user in users %}
+                {#{% if user not in team.users %}#}
+                {% if not team.users.contains(user) %}
+                    <option value="{{ user.id }}">{{ user }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button type="submit">Enregistrer</button>
+    </form>
+
+{% endblock %}

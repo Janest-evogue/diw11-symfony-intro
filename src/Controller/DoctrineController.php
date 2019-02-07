@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Publication;
+use App\Entity\Team;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -294,6 +295,52 @@ class DoctrineController extends AbstractController
             'doctrine/publications.html.twig',
             [
                 'publications' => $user->getPublications()
+            ]
+        );
+    }
+
+    /**
+     * @Route("/users/team/{id}")
+     */
+    public function userByTeam(Team $team)
+    {
+        // le lazy loading fonctionne aussi en relation ManyToMany
+
+        return $this->render(
+            'doctrine/list_users.html.twig',
+            [
+                'users' => $team->getUsers()
+            ]
+        );
+    }
+
+    /**
+     * @Route("/team/{id}/add-user")
+     */
+    public function addUserToTeam(Request $request, Team $team)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(User::class);
+        // permet un findAll() avec un tri sur le nom :
+        $users = $repository->findBy([], ['lastname' => 'ASC']);
+
+        if ($request->isMethod('POST')) {
+            // $_POST['user']
+            $userId = $request->request->get('user');
+
+            $user = $repository->find($userId);
+
+            $team->getUsers()->add($user);
+
+            $em->persist($team);
+            $em->flush();
+        }
+
+        return $this->render(
+            'doctrine/add_user_to_team.html.twig',
+            [
+                'users' => $users,
+                'team' => $team
             ]
         );
     }
